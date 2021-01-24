@@ -14,6 +14,23 @@ using namespace std::filesystem;
 
 stack<string> dosyaNames;
 
+int lastArrayFinder(string arrayName[]);
+void stringParse(string inputLine, char ParsingChar, string parcaci[], int counter);
+void reverseStr(string& str);
+string path2Name(string str);
+void dosyalariBul();
+void fileOkuma(string dosyaName, string lines[]);
+void arraybosalt(string bosaltaray[]);
+void fileProcess();
+
+
+int main()
+{
+	fileProcess();
+	
+}
+
+
 int lastArrayFinder(string arrayName[]) {   //girilen arrayde bulunan en son elemanýn indexini return eder
 	string* temp;
 	temp = arrayName;
@@ -55,7 +72,6 @@ void stringParse(string inputLine, char ParsingChar, string parcaci[], int count
 	}
 }
 
-
 void reverseStr(string& str)
 {
 	int n = str.length();
@@ -64,6 +80,7 @@ void reverseStr(string& str)
 	for (int i = 0; i < n / 2; i++)
 		swap(str[i], str[n - i - 1]);
 }
+
 string path2Name(string str) {                            //PATH ÝLE ELDE ETTÝÐÝMÝZ YOLDA BULUNAN DOSYALARIN ÝSÝMLERÝNÝN AYRILMASI         
 	string temp = "";
 	reverseStr(str);
@@ -83,8 +100,8 @@ string path2Name(string str) {                            //PATH ÝLE ELDE ETTÝÐÝ
 }
 
 void dosyalariBul() {
-			// C:\\Users\\furkan\\Desktop\\final cpp\\testortami
-			//C:\\Users\\ahmet\\Desktop\\cppdeneme
+	// C:\\Users\\furkan\\Desktop\\final cpp\\testortami
+	//C:\\Users\\ahmet\\Desktop\\cppdeneme
 	path p("C:\\Users\\furkan\\Desktop\\final cpp\\testortami");
 	if (!is_directory(p)) {                                                                         //BÖYLE BÝR DÝZÝN VAR MI KONTROLÜ
 
@@ -98,7 +115,7 @@ void dosyalariBul() {
 		  /*  cout << entry.path().string() << endl;*/
 
 		  // dosyaNames_Path.insert({ path2Name(entry.path().string()), entry.path().string() });     //MAP ÝÇERÝSÝNE EKLEME
-			if (!(entry.path().string() == absolute(p).string() + dontWant) ) {
+			if (!(entry.path().string() == absolute(p).string() + dontWant)) {
 				dosyaNames.push(entry.path().string());
 				cout << "bulunan dosya: " << entry.path().string() << endl;
 			}
@@ -137,33 +154,34 @@ void arraybosalt(string bosaltaray[]) {
 	}
 
 }
-int main()
-{
+
+void fileProcess() {
+
 	string LineParcalari[100];
 	string DosyaninLineleri[100];
 	dosyalariBul();
-	
+
 	for (int i = 0; i < dosyaNames.size();i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
 		/*cout << "dosya ad: "<<dosyaNames.top() << endl*/;
 		fileOkuma(dosyaNames.top(), DosyaninLineleri);		//SEÇÝLEN SIRADAKÝ DOSYANIN SATIRLARI DOSYALÝNES ÝÇERÝSÝNE BÝR ÝNDEX OLARAK ATILDI		
 
 		for (int i = 0; i <= lastArrayFinder(DosyaninLineleri); i++) {				//bütün satýrlar burada ayrý ayrý açýlýyor, satýrýn belirlendiði nokta
 			cout << DosyaninLineleri[i] << endl;
-			stringParse(DosyaninLineleri[i], ' ',LineParcalari,i);			//line stringi alýndý ve parçalanarak lineparçalarýnýn içerisine atýldý
+			stringParse(DosyaninLineleri[i], ' ', LineParcalari, i);			//line stringi alýndý ve parçalanarak lineparçalarýnýn içerisine atýldý
 
 			for (int j = 0;j <= lastArrayFinder(LineParcalari);j++) {		//satýr içerisinde parçalarda gezilen yer saðlanan yer
-				
+
 				if (LineParcalari[j][0] >= 65 && LineParcalari[j][0] <= 122) {
-					
+
 					if (LineParcalari[j][1] == 'U' && LineParcalari[j][2] == 'T') {
 						cout << " SONRAKÝ DEGER CIKTI" << endl;
 					}
 					else {
 						cout << "BURADA BÝR HARF VAR" << endl;
 					}
-					
+
 				}
-				else if (LineParcalari[j][0] == 61) {	
+				else if (LineParcalari[j][0] == 61) {
 					cout << "ATAMA OPERATORU VAR" << endl;
 				}
 				else if (LineParcalari[j][0] == 43) {
@@ -187,7 +205,7 @@ int main()
 		cout << "Sonraki dosyaya geciliyor..." << endl;
 		arraybosalt(DosyaninLineleri);
 	}
-	
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

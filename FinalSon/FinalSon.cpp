@@ -112,15 +112,14 @@ void dosyalariBul() {
 		string dontWant = "FinalSon.exe";
 		for (const auto& entry : directory_iterator(absolute(p))) {                                 //DOSYA ÝSÝMLERÝNÝ BULMA
 
-		    cout << entry.path().string() << endl;
 
-		  // dosyaNames_Path.insert({ path2Name(entry.path().string()), entry.path().string() });     //MAP ÝÇERÝSÝNE EKLEME
-			if (!(entry.path().string() == absolute(p).string() + dontWant)) {
+
+			if (entry.path().extension() == ".inp")
+			{
 				dosyaNames.push(entry.path().string());
-				cout << "bulunan dosya: " << entry.path().string() << endl;
+				cout << "bulunan dosya: " << entry.path().filename() << endl;
 			}
 
-			//cout << "burada dosya var";
 		}
 	}
 }
@@ -227,7 +226,7 @@ void fileProcess() {
 			}
 			arraybosalt(LineParcalari);
 		}
-		cout << "Sonraki dosyaya geciliyor..." << endl;
+		cout << "Sonraki dosyaya geciliyor...\n----------------------------------------------------" << endl;
 		arraybosalt(DosyaninLineleri);
 	}
 

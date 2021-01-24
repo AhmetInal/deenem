@@ -83,8 +83,9 @@ string path2Name(string str) {                            //PATH ÝLE ELDE ETTÝÐÝ
 }
 
 void dosyalariBul() {
-
-	path p("C:\\Users\\ahmet\\Desktop\\cppdeneme");
+			// C:\\Users\\furkan\\Desktop\\final cpp\\testortami
+			//C:\\Users\\ahmet\\Desktop\\cppdeneme
+	path p("C:\\Users\\furkan\\Desktop\\final cpp\\testortami");
 	if (!is_directory(p)) {                                                                         //BÖYLE BÝR DÝZÝN VAR MI KONTROLÜ
 
 		cout << "Burada böyle bir klasör yok" << endl;

@@ -154,7 +154,14 @@ int main()
 			for (int j = 0;j <= lastArrayFinder(LineParcalari);j++) {		//satýr içerisinde parçalarda gezilen yer saðlanan yer
 				
 				if (LineParcalari[j][0] >= 65 && LineParcalari[j][0] <= 122) {
-					cout << "BURADA BÝR HARF VAR" << endl;
+					
+					if (LineParcalari[j][1] == 'U' && LineParcalari[j][2] == 'T') {
+						cout << " SONRAKÝ DEGER CIKTI" << endl;
+					}
+					else {
+						cout << "BURADA BÝR HARF VAR" << endl;
+					}
+					
 				}
 				else if (LineParcalari[j][0] == 61) {	
 					cout << "ATAMA OPERATORU VAR" << endl;

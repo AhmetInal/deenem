@@ -1,13 +1,12 @@
 // FinalSon.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-#include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <filesystem>
 #include <string>
 #include <stack>
 #include <map>
-#include <queue>
+
 
 using namespace std;
 using namespace std::filesystem;
@@ -102,6 +101,7 @@ string path2Name(string str) {                            //PATH ÝLE ELDE ETTÝÐÝ
 void dosyalariBul() {
 	// C:\\Users\\furkan\\Desktop\\final cpp\\testortami
 	//C:\\Users\\ahmet\\Desktop\\cppdeneme
+	// ".\\"
 	path p("C:\\Users\\ahmet\\Desktop\\cppdeneme");
 	if (!is_directory(p)) {                                                                         //BÖYLE BÝR DÝZÝN VAR MI KONTROLÜ
 
@@ -148,7 +148,7 @@ void fileOkuma(string dosyaName, string lines[]) {                    //dosyanýn
 }
 
 void arraybosalt(string bosaltaray[]) {
-	for (int i = 0; i < sizeof(bosaltaray); i++) {
+	for (int i = 0; i <30; i++) {
 		bosaltaray[i] = "";
 	}
 
@@ -192,8 +192,6 @@ int whatisThis(string whatis) { // 0- Ad 1- Rakam 2- operand manasýna gelmektedi
 	}
 }
 	
-
-
 void satirIsleme(string parcalar[]) {
 	// ({ "A","=" ,"5" })
 
@@ -204,6 +202,26 @@ void satirIsleme(string parcalar[]) {
 			auto new_Value = values.at(parcalar[2]) + values.at(parcalar[4]);
 			values.insert({ parcalar[0],new_Value });
 		}
+
+		else if (parcalar[3][0] == 45) {
+
+			auto new_Value = values.at(parcalar[2]) - values.at(parcalar[4]);
+			values.insert({ parcalar[0],new_Value });
+		}
+		else if (parcalar[3][0] == 47) {
+
+			auto new_Value = values.at(parcalar[2]) / values.at(parcalar[4]);
+			values.insert({ parcalar[0],new_Value });
+		}
+		else if (parcalar[3][0] == 42) {
+
+			auto new_Value = values.at(parcalar[2]) * values.at(parcalar[4]);
+			values.insert({ parcalar[0],new_Value });
+		}
+		else {
+			cout << "burada bir hata var: (Operand olmayabilir)" << endl;
+		}
+
 		int nedirBu = whatisThis(parcalar[2]);
 		if (nedirBu == 0) {
 			values.insert({ parcalar[0],values.at(parcalar[2]) });
@@ -211,15 +229,19 @@ void satirIsleme(string parcalar[]) {
 		else if (nedirBu == 1) {
 			values.insert({ parcalar[0],stof(parcalar[2]) });
 		}		
+		else {
+			cout << "burada bir hata var: (nedirbu Value)" << endl;
+		}
 		/*cout << "degeriniz: " << values.at(parcalar[0]) << endl;;*/
 	}
 
 
 	else {
-
+		
 		cout << values.at(parcalar[1]) << endl;
 	}
 }
+
 void fileProcess() {
 
 	string LineParcalari[100];
@@ -227,14 +249,17 @@ void fileProcess() {
 	dosyalariBul();
 	map<char, int> integerValues;
 	map<char, float>floatValues;
-	for (unsigned int i = 0; i <= dosyaNames.size();i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
+	short int size = dosyaNames.size();
+	for (unsigned int i = 0; i < size;i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
 		values.clear();
-		/*cout << "dosya ad: "<<dosyaNames.top() << endl*/;
-		fileOkuma(dosyaNames.top(), DosyaninLineleri);		//SEÇÝLEN SIRADAKÝ DOSYANIN SATIRLARI DOSYALÝNES ÝÇERÝSÝNE BÝR ÝNDEX OLARAK ATILDI		
+		DosyaninLineleri->clear();
+		LineParcalari->clear();
+		string dosyaninAdi = dosyaNames.top();
+		fileOkuma(dosyaninAdi, DosyaninLineleri);		//SEÇÝLEN SIRADAKÝ DOSYANIN SATIRLARI DOSYALÝNES ÝÇERÝSÝNE BÝR ÝNDEX OLARAK ATILDI		
 
 		for (int i = 0; i <= lastArrayFinder(DosyaninLineleri); i++) {				//bütün satýrlar burada ayrý ayrý açýlýyor, satýrýn belirlendiði nokta
 			cout << DosyaninLineleri[i] << endl;
-			cout << "olusturulacak degisken sayisi: " << lastArrayFinder(DosyaninLineleri) << endl;
+			/*cout << "olusturulacak degisken sayisi: " << lastArrayFinder(DosyaninLineleri) << endl;*/
 
 			stringParse(DosyaninLineleri[i], ' ', LineParcalari, i);			//line stringi alýndý ve parçalanarak lineparçalarýnýn içerisine atýldý
 
@@ -247,7 +272,8 @@ void fileProcess() {
 			}
 			arraybosalt(LineParcalari);
 		}
-		cout << "Sonraki dosyaya geciliyor...\n----------------------------------------------------" << endl;
+		cout << "\n\n\nSonraki dosyaya geciliyor...\n----------------------------------------------------\n" << endl;
+		
 		arraybosalt(DosyaninLineleri);
 	}
 

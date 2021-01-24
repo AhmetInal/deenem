@@ -1,5 +1,16 @@
 // FinalSon.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+//Ahmet Furkan Ýnal
+//131 618 1667 
+
+// Challenge 5'ten sonra gelen if,loop ve parantez yapýlarý programýn hata vermesine yol açmakta.
+// program tek bir atama iþlemini ve "A = B * C "tarzýnda  bir iþlemi baþarýyla yapabilir durumda
+// fstream kütüphanesi, dosya açma okuma ve yazma iþlemlerini yaparken kullanýldý
+// filesystem kütüphanesi, exe dosyasýnýn çalýþtýrýldýðý klasördeki tüm dosyalarý bulmayý ve inp dosyalarýnýn ayrýlmasýný saðlamakta kullanýldý
+// string kütüphanesi, stringler üzerinde yapýlan çevirme iþlemlerde ve dosyadan veri okunurken kullanýldý. 
+// stack içerisinde, dosyalarýn isimleri tutuluyor
+// map ise, deðerlerin atamalarýný ve "deðer - value" iliþkisinin kurulmasý amacýyla kullanýldý.
+
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -10,9 +21,10 @@
 
 using namespace std;
 using namespace std::filesystem;
-
+float sonuc;
 stack<string> dosyaNames;
 map<string, float> values;
+
 int lastArrayFinder(string arrayName[]);
 void stringParse(string inputLine, char ParsingChar, string parcaci[], int counter);
 void reverseStr(string& str);
@@ -20,8 +32,10 @@ string path2Name(string str);
 void dosyalariBul();
 void fileOkuma(string dosyaName, string lines[]);
 void arraybosalt(string bosaltaray[]);
+int whatisThis(string whatis);
+float satirIsleme(string parcalar[]);
 void fileProcess();
-
+void fileYazma(string dosyaName, float yazilacakLine);
 
 int main()
 {
@@ -99,10 +113,9 @@ string path2Name(string str) {                            //PATH ÝLE ELDE ETTÝÐÝ
 }
 
 void dosyalariBul() {
-	// C:\\Users\\furkan\\Desktop\\final cpp\\testortami
-	//C:\\Users\\ahmet\\Desktop\\cppdeneme
+	
 	// ".\\"
-	path p("C:\\Users\\ahmet\\Desktop\\cppdeneme");
+	path p(".\\");
 	if (!is_directory(p)) {                                                                         //BÖYLE BÝR DÝZÝN VAR MI KONTROLÜ
 
 		cout << "Burada böyle bir klasör yok" << endl;
@@ -192,7 +205,7 @@ int whatisThis(string whatis) { // 0- Ad 1- Rakam 2- operand manasýna gelmektedi
 	}
 }
 	
-void satirIsleme(string parcalar[]) {
+float satirIsleme(string parcalar[]) {
 	// ({ "A","=" ,"5" })
 
 	if (parcalar[1][0] == 61) {
@@ -201,6 +214,7 @@ void satirIsleme(string parcalar[]) {
 
 			auto new_Value = values.at(parcalar[2]) + values.at(parcalar[4]);
 			values.insert({ parcalar[0],new_Value });
+
 		}
 
 		else if (parcalar[3][0] == 45) {
@@ -219,7 +233,7 @@ void satirIsleme(string parcalar[]) {
 			values.insert({ parcalar[0],new_Value });
 		}
 		else {
-			cout << "burada bir hata var: (Operand olmayabilir)" << endl;
+			cout << "burada operand olmayabilir" << endl;
 		}
 
 		int nedirBu = whatisThis(parcalar[2]);
@@ -238,8 +252,28 @@ void satirIsleme(string parcalar[]) {
 
 	else {
 		
-		cout << values.at(parcalar[1]) << endl;
+		return values.at(parcalar[1]);
+		/*cout << values.at(parcalar[1]) << endl;*/
 	}
+}
+
+void fileYazma(string dosyaName, float yazilacakLine) {
+
+	string temp = dosyaName;
+	for (int i = 0; i < temp.length(); i++)
+	{
+		if (temp[i] == '.')
+		{
+			temp[i + 1] = 'o';
+			temp[i + 2] = 'u';
+			temp[i + 3] = 't';
+			break;
+		}
+	}
+	ofstream Challenge(temp, ios::out);
+
+	Challenge << yazilacakLine;
+	Challenge.close();
 }
 
 void fileProcess() {
@@ -249,7 +283,8 @@ void fileProcess() {
 	dosyalariBul();
 	map<char, int> integerValues;
 	map<char, float>floatValues;
-	short int size = dosyaNames.size();
+	int size = dosyaNames.size();
+	
 	for (unsigned int i = 0; i < size;i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
 		values.clear();
 		DosyaninLineleri->clear();
@@ -266,18 +301,22 @@ void fileProcess() {
 
 			for (int j = 0;j <= lastArrayFinder(LineParcalari);j++) {		//satýr içerisinde parçalarda gezilen yer saðlanan yer
 
-				satirIsleme(LineParcalari);
+				sonuc = satirIsleme(LineParcalari);
 
 
 			}
+			
 			arraybosalt(LineParcalari);
 		}
-		cout << "\n\n\nSonraki dosyaya geciliyor...\n----------------------------------------------------\n" << endl;
+		fileYazma(dosyaninAdi, sonuc);
+		cout << sonuc << endl;
+		cout << "\n\nSonraki dosyaya geciliyor...\n----------------------------------------------------\n" << endl;
 		
 		arraybosalt(DosyaninLineleri);
 	}
 
 }
+
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
 // Debug program: F5 or Debug > Start Debugging menu

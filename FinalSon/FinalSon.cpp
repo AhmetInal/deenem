@@ -13,7 +13,7 @@ using namespace std;
 using namespace std::filesystem;
 
 stack<string> dosyaNames;
-
+map<string, float> values;
 int lastArrayFinder(string arrayName[]);
 void stringParse(string inputLine, char ParsingChar, string parcaci[], int counter);
 void reverseStr(string& str);
@@ -27,7 +27,7 @@ void fileProcess();
 int main()
 {
 	fileProcess();
-	
+
 }
 
 
@@ -154,6 +154,72 @@ void arraybosalt(string bosaltaray[]) {
 
 }
 
+int whatisThis(string whatis) { // 0- Ad 1- Rakam 2- operand manasýna gelmektedir
+
+	if (whatis[0] >= 65 && whatis[0] <= 122) {					//parçalar harf ise ascii 65 ile 122 arasýnda deðer alýr
+
+		/*cout << "BURADA BÝR HARF VAR" << endl;*/
+		return 0;
+
+	}
+
+	else if (whatis[0] == 43) {										// + ascii kodu
+		/*cout << "TOPLAMA OPERATORU VAR" << endl;*/
+		return 2;
+	}
+
+	else if (whatis[0] == 42) {										// * ascii kodu
+		///*cout << "CARPMA OPERATORU VAR" << endl;*/
+		return 2;
+	}
+
+	else if (whatis[0] == 45) {										// - ascii kodu
+		/*cout << "CIKARMA OPERATORU VAR" << endl;*/
+		return 2;
+	}
+
+	else if (whatis[0] == 47) {										//  '/'  ascii kodu
+		/*cout << "BOLME OPERATORU VAR" << endl;*/
+		return 2;
+	}
+
+	else if (whatis[0] >= 48 && whatis[0] <= 57) {			// alýnan degerler
+		/*cout << "Burada bir deger var" << endl;*/
+		return 1;
+	}
+	else {
+		return -1;
+	}
+}
+	
+
+
+void satirIsleme(string parcalar[]) {
+	// ({ "A","=" ,"5" })
+
+	if (parcalar[1][0] == 61) {
+
+		if (parcalar[3][0] == 43) {
+
+			auto new_Value = values.at(parcalar[2]) + values.at(parcalar[4]);
+			values.insert({ parcalar[0],new_Value });
+		}
+		int nedirBu = whatisThis(parcalar[2]);
+		if (nedirBu == 0) {
+			values.insert({ parcalar[0],values.at(parcalar[2]) });
+		}
+		else if (nedirBu == 1) {
+			values.insert({ parcalar[0],stof(parcalar[2]) });
+		}		
+		/*cout << "degeriniz: " << values.at(parcalar[0]) << endl;;*/
+	}
+
+
+	else {
+
+		cout << values.at(parcalar[1]) << endl;
+	}
+}
 void fileProcess() {
 
 	string LineParcalari[100];
@@ -161,66 +227,21 @@ void fileProcess() {
 	dosyalariBul();
 	map<char, int> integerValues;
 	map<char, float>floatValues;
-	for (int i = 0; i <= dosyaNames.size();i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
+	for (unsigned int i = 0; i <= dosyaNames.size();i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
+		values.clear();
 		/*cout << "dosya ad: "<<dosyaNames.top() << endl*/;
 		fileOkuma(dosyaNames.top(), DosyaninLineleri);		//SEÇÝLEN SIRADAKÝ DOSYANIN SATIRLARI DOSYALÝNES ÝÇERÝSÝNE BÝR ÝNDEX OLARAK ATILDI		
-		
+
 		for (int i = 0; i <= lastArrayFinder(DosyaninLineleri); i++) {				//bütün satýrlar burada ayrý ayrý açýlýyor, satýrýn belirlendiði nokta
 			cout << DosyaninLineleri[i] << endl;
 			cout << "olusturulacak degisken sayisi: " << lastArrayFinder(DosyaninLineleri) << endl;
-			
+
 			stringParse(DosyaninLineleri[i], ' ', LineParcalari, i);			//line stringi alýndý ve parçalanarak lineparçalarýnýn içerisine atýldý
+
 
 			for (int j = 0;j <= lastArrayFinder(LineParcalari);j++) {		//satýr içerisinde parçalarda gezilen yer saðlanan yer
 
-				if (LineParcalari[j][0] >= 65 && LineParcalari[j][0] <= 122) {					//parçalar harf ise ascii 65 ile 122 arasýnda deðer alýr
-
-					if (LineParcalari[j][1] == 'U' && LineParcalari[j][2] == 'T') {				// CIKTI ÝCÝN 3 TANE CHAR DEGERÝ DOÐRU OLMALI
-						cout << " SONRAKI DEGER CIKTI" << endl;
-					}
-					else {
-						cout << "BURADA BÝR HARF VAR" << endl;
-					}
-
-				}
-				else if (LineParcalari[j][0] == 61) {										// = ascii kodu
-					cout << "ATAMA OPERATORU VAR" << endl;
-				}
-
-				else if (LineParcalari[j][0] == 43) {										// + ascii kodu
-					cout << "TOPLAMA OPERATORU VAR" << endl;
-				}
-
-				else if (LineParcalari[j][0] == 42) {										// * ascii kodu
-					cout << "CARPMA OPERATORU VAR" << endl;
-				}
-
-				else if (LineParcalari[j][0] == 45) {										// - ascii kodu
-					cout << "CIKARMA OPERATORU VAR" << endl;
-				}
-
-				else if (LineParcalari[j][0] == 47) {										//  '/'  ascii kodu
-					cout << "BOLME OPERATORU VAR" << endl;
-				}
-
-				else if (LineParcalari[j][0] >= 48 && LineParcalari[j][0] <= 57) {			// alýnan degerler
-					cout << "Burada bir deger var" << endl;
-					for (int k = 0; k <= LineParcalari[j].length();k++) {
-						if (LineParcalari[j][k] == 46) {									//sayýnýn içerisinde . deðer var ise bu deðer float veya double olarak saklanýr
-							cout << "BURADA DOUBLE SAYI VAR" << endl;
-							break;
-							
-						}
-						else {
-							cout << "sonraki basamaga bakiliyor " << endl;
-							if (LineParcalari[j][k + 1] == '\0') {
-								cout << "bu bir integer" << endl;
-								break;
-							}
-						}
-					}
-				}
-
+				satirIsleme(LineParcalari);
 
 
 			}

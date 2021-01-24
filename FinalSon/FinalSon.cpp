@@ -102,7 +102,7 @@ string path2Name(string str) {                            //PATH ÝLE ELDE ETTÝÐÝ
 void dosyalariBul() {
 	// C:\\Users\\furkan\\Desktop\\final cpp\\testortami
 	//C:\\Users\\ahmet\\Desktop\\cppdeneme
-	path p("C:\\Users\\furkan\\Desktop\\final cpp\\testortami");
+	path p("C:\\Users\\ahmet\\Desktop\\cppdeneme");
 	if (!is_directory(p)) {                                                                         //BÖYLE BÝR DÝZÝN VAR MI KONTROLÜ
 
 		cout << "Burada böyle bir klasör yok" << endl;
@@ -112,7 +112,7 @@ void dosyalariBul() {
 		string dontWant = "FinalSon.exe";
 		for (const auto& entry : directory_iterator(absolute(p))) {                                 //DOSYA ÝSÝMLERÝNÝ BULMA
 
-		  /*  cout << entry.path().string() << endl;*/
+		    cout << entry.path().string() << endl;
 
 		  // dosyaNames_Path.insert({ path2Name(entry.path().string()), entry.path().string() });     //MAP ÝÇERÝSÝNE EKLEME
 			if (!(entry.path().string() == absolute(p).string() + dontWant)) {
@@ -160,41 +160,66 @@ void fileProcess() {
 	string LineParcalari[100];
 	string DosyaninLineleri[100];
 	dosyalariBul();
-
-	for (int i = 0; i < dosyaNames.size();i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
+	map<char, int> integerValues;
+	map<char, float>floatValues;
+	for (int i = 0; i <= dosyaNames.size();i++) {            //BURADA i <  DOSYA SAYISI YAPMAN GEREKYÝÞRO
 		/*cout << "dosya ad: "<<dosyaNames.top() << endl*/;
 		fileOkuma(dosyaNames.top(), DosyaninLineleri);		//SEÇÝLEN SIRADAKÝ DOSYANIN SATIRLARI DOSYALÝNES ÝÇERÝSÝNE BÝR ÝNDEX OLARAK ATILDI		
-
+		
 		for (int i = 0; i <= lastArrayFinder(DosyaninLineleri); i++) {				//bütün satýrlar burada ayrý ayrý açýlýyor, satýrýn belirlendiði nokta
 			cout << DosyaninLineleri[i] << endl;
+			cout << "olusturulacak degisken sayisi: " << lastArrayFinder(DosyaninLineleri) << endl;
+			
 			stringParse(DosyaninLineleri[i], ' ', LineParcalari, i);			//line stringi alýndý ve parçalanarak lineparçalarýnýn içerisine atýldý
 
 			for (int j = 0;j <= lastArrayFinder(LineParcalari);j++) {		//satýr içerisinde parçalarda gezilen yer saðlanan yer
 
-				if (LineParcalari[j][0] >= 65 && LineParcalari[j][0] <= 122) {
+				if (LineParcalari[j][0] >= 65 && LineParcalari[j][0] <= 122) {					//parçalar harf ise ascii 65 ile 122 arasýnda deðer alýr
 
-					if (LineParcalari[j][1] == 'U' && LineParcalari[j][2] == 'T') {
-						cout << " SONRAKÝ DEGER CIKTI" << endl;
+					if (LineParcalari[j][1] == 'U' && LineParcalari[j][2] == 'T') {				// CIKTI ÝCÝN 3 TANE CHAR DEGERÝ DOÐRU OLMALI
+						cout << " SONRAKI DEGER CIKTI" << endl;
 					}
 					else {
 						cout << "BURADA BÝR HARF VAR" << endl;
 					}
 
 				}
-				else if (LineParcalari[j][0] == 61) {
+				else if (LineParcalari[j][0] == 61) {										// = ascii kodu
 					cout << "ATAMA OPERATORU VAR" << endl;
 				}
-				else if (LineParcalari[j][0] == 43) {
+
+				else if (LineParcalari[j][0] == 43) {										// + ascii kodu
 					cout << "TOPLAMA OPERATORU VAR" << endl;
 				}
-				else if (LineParcalari[j][0] == 42) {
+
+				else if (LineParcalari[j][0] == 42) {										// * ascii kodu
 					cout << "CARPMA OPERATORU VAR" << endl;
 				}
-				else if (LineParcalari[j][0] == 45) {
+
+				else if (LineParcalari[j][0] == 45) {										// - ascii kodu
 					cout << "CIKARMA OPERATORU VAR" << endl;
 				}
-				else if (LineParcalari[j][0] == 47) {
+
+				else if (LineParcalari[j][0] == 47) {										//  '/'  ascii kodu
 					cout << "BOLME OPERATORU VAR" << endl;
+				}
+
+				else if (LineParcalari[j][0] >= 48 && LineParcalari[j][0] <= 57) {			// alýnan degerler
+					cout << "Burada bir deger var" << endl;
+					for (int k = 0; k <= LineParcalari[j].length();k++) {
+						if (LineParcalari[j][k] == 46) {									//sayýnýn içerisinde . deðer var ise bu deðer float veya double olarak saklanýr
+							cout << "BURADA DOUBLE SAYI VAR" << endl;
+							break;
+							
+						}
+						else {
+							cout << "sonraki basamaga bakiliyor " << endl;
+							if (LineParcalari[j][k + 1] == '\0') {
+								cout << "bu bir integer" << endl;
+								break;
+							}
+						}
+					}
 				}
 
 
